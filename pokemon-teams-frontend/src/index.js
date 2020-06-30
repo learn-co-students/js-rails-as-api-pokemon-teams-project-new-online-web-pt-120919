@@ -4,38 +4,49 @@ const POKEMONS_URL = `${BASE_URL}/pokemons`
 
 fetch(TRAINERS_URL)
   .then((res) => res.json())
-  .then((res) => displayData(res))
+  .then((res) => displayTrainers(res))
   .catch((err) => console.log(err));
 
-    function displayData(object) {
-      object.forEach(element => {
+    function displayTrainers(object) {
+      object.forEach(trainer => {
         const main = document.querySelector("main")  
         const div = document.createElement("div")  
         div.className = "card"
-        div.setAttribute("data-id", `${element.id}`)
-        div.innerHTML = `<p>${element.name}</p>`
+        div.setAttribute("data-id", `${trainer.id}`)
+        div.innerHTML = `<p>${trainer.name}</p>`
         const button = document.createElement("button")
-        button.setAttribute("data-trainer-id", `${element.id}`)
+        button.setAttribute("data-trainer-id", `${trainer.id}`)
         button.innerHTML = "Add Pokemon"
-
+        // event listener
         button.addEventListener("click", addPokemon)
-
         div.appendChild(button)
-        const ul = document.createElement("ul")
-        div.appendChild(ul)
         main.appendChild(div)
-        element.pokemons.forEach(elementData => {
-            console.log(elementData)
-            ul.innerHTML += `<li>${elementData.nickname} (${elementData.species})<button class="release" data-pokemon-id=${elementData.id}>Release</button> </li>`
-            div.appendChild(ul)
+        
+        trainer.pokemons.forEach(pokemon => {
+            renderPokemon(pokemon)
         });
       });
+    }
+
+    const renderPokemon = (pokemon) => {
+        // we are looking for a div element, that has a data-id property that is = to pokemon.trainer_id
+        const ul = document.querySelector(`div[data-id="${pokemon.trainer_id}"]`)
+        const li = document.createElement("li")
+        const button = document.createElement("button")
+
+        li.innerHTML = `${pokemon.nickname} (${pokemon.species})`
+        button.setAttribute("class", "release")
+        button.setAttribute("data-pokemon-id", pokemon.id)
+        button.innerHTML = "Release"
+
+        li.appendChild(button)
+        ul.appendChild(li)
     }
 
 const addPokemon = (e) => {
     e.preventDefault()
     const configObject = {
-        mathod: "POST",
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
@@ -44,7 +55,13 @@ const addPokemon = (e) => {
     }
     fetch(POKEMONS_URL, configObject)
     .then(res => res.json())
-    .then(console.log("Hello!"))
+    .then(json => {
+        if (json.message) {
+            alert(json.message)
+        } else {
+            renderPokemon(json)
+        }
+    })
 }    
 
 

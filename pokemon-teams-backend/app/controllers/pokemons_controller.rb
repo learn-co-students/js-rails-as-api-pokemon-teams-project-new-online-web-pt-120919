@@ -11,7 +11,7 @@ class PokemonsController < ApplicationController
             nickname: nickname, species: species
         })
         if pokemon.save
-            render json: pokemons
+            render json: pokemon
         else
             render json: {message: pokemon.errors.messages[:team_max][0]}
         end
@@ -22,8 +22,8 @@ class PokemonsController < ApplicationController
         pokemon.destroy 
     end
 
-    def index
-        pokemons = Pokemon.all 
-        render json: pokemons 
-    end
+    # def index
+    #     pokemons = Pokemon.all 
+    #     render json: pokemons 
+    # end
 end
