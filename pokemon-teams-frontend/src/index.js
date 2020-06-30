@@ -29,8 +29,8 @@ fetch(TRAINERS_URL)
     }
 
     const renderPokemon = (pokemon) => {
-        // we are looking for a div element, that has a data-id property that is = to pokemon.trainer_id
-        const ul = document.querySelector(`div[data-id="${pokemon.trainer_id}"]`)
+        // we are looking for a div element that has a data-id property that is = to pokemon.trainer_id
+        const div = document.querySelector(`div[data-id="${pokemon.trainer_id}"]`)
         const li = document.createElement("li")
         const button = document.createElement("button")
 
@@ -38,31 +38,48 @@ fetch(TRAINERS_URL)
         button.setAttribute("class", "release")
         button.setAttribute("data-pokemon-id", pokemon.id)
         button.innerHTML = "Release"
-
+        // event listener
+        button.addEventListener("click", releasePokemon)
         li.appendChild(button)
-        ul.appendChild(li)
+        div.appendChild(li)
     }
 
-const addPokemon = (e) => {
-    e.preventDefault()
-    const configObject = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        body: JSON.stringify({trainer_id: e.target.dataset.trainerId})
-    }
-    fetch(POKEMONS_URL, configObject)
-    .then(res => res.json())
-    .then(json => {
-        if (json.message) {
-            alert(json.message)
-        } else {
-            renderPokemon(json)
+    const addPokemon = (e) => {
+        console.log(e.target)
+        e.preventDefault()
+        const configObject = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            //so in order to receive a pokemon obj back we need to give our database the trainer_id
+            //this also gives us access to the trainer_id in the params hash that is accessed in the PokemonsController
+            body: JSON.stringify({trainer_id: e.target.dataset.trainerId})
         }
-    })
-}    
+        fetch(POKEMONS_URL, configObject)
+        .then(res => res.json())
+        .then(json => {
+            if (json.message) {
+                alert(json.message)
+            } else {
+                renderPokemon(json)
+            }
+        })
+    }    
+
+    const releasePokemon = (e) => {
+        e.preventDefault()
+        const configObject = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+        }
+        fetch(`${POKEMONS_URL}/${e.target.dataset.pokemonId}`, configObject)
+        e.target.parentElement.remove()
+    }
 
 
 
