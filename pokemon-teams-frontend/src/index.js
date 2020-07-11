@@ -62,15 +62,28 @@ const loadTrainers = () => {
                 "Content_Type": "application/json",
                 "Accept": "application/json"
             }
-            body: JSON.stringify(trainer_id: e.target.dataset.trainerId)
+            body: JSON.stringify({trainer_id: e.target.dataset.trainerId})
         }
-        fetch(POKEMONS_URL, configObj)
+        fetch(POKEMONS_URL, configObject)
         .then(res => res.json())
         .then(json => {
-            
+            if (json.message) {
+                alert(json.message)
+            } else {
+                renderPokemon(json)
+            }
         })
-    }
+    }    
 
-    const deletePokemon = (e) => {
+    const releasePokemon = (e) => {
         e.preventDefault()
+        const configObject = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+        }
+        fetch(`${POKEMONS_URL}/${e.target.dataset.pokemonId}`, configObject)
+        e.target.parentElement.remove()
     }
