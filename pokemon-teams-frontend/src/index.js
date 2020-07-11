@@ -46,7 +46,7 @@ const loadTrainers = () => {
         button.setAttribute("class" , "release")
         button.setAttribute("data-pokemon-id" , "pokemon.id")
         button.innerHTML = "Release"
-        button.addEventListener("click", destroyPokemon)
+        button.addEventListener("click", deletePokemon)
 
         li.appendChild(button)
         ul.appendChild(li)
@@ -54,6 +54,23 @@ const loadTrainers = () => {
     }
 
 
-    const createPokemon = () => {
+    const createPokemon = (e) => {
+        e.preventDefault()
+        const configObj = {
+            method: "POST",
+            headers: {
+                "Content_Type": "application/json",
+                "Accept": "application/json"
+            }
+            body: JSON.stringify(trainer_id: e.target.dataset.trainerId)
+        }
+        fetch(POKEMONS_URL, configObj)
+        .then(res => res.json())
+        .then(json => {
+            
+        })
+    }
 
+    const deletePokemon = (e) => {
+        e.preventDefault()
     }
