@@ -34,7 +34,6 @@ const renderCards = (hash) => {
         addBtn.innerText = "Add Pokemon"
         addBtn.addEventListener("click", fetchPokemon)
     const ul = document.createElement("ul") // need an id of some sort
-        // div.appendChild(pDiv, addBtn, ul)
         pDiv.appendChild(addBtn)
         div.appendChild(pDiv)
         div.appendChild(ul)
@@ -44,7 +43,7 @@ const renderCards = (hash) => {
 }
 
 const fetchPokemon = (event) => {
-    debugger
+    // debugger
     event.preventDefault()
     let configObj = {
         method: "POST",
@@ -52,33 +51,37 @@ const fetchPokemon = (event) => {
             "Content-Type": "application/json",
             "Accept": "application/json"
         },
-        body: JSON.stringify({id: event.target.dataset.trainerId})
+        body: JSON.stringify({trainer_id: event.target.dataset.trainerId})
     }
     fetch(POKEMONS_URL, configObj)
     .then(response => {
         debugger
-        console.log(response.json())
+        // console.log(response.json())
+        response.json() //undefined
     })
     .then(json => {
-        debugger
-        if(json.message){
-            alert(json.message) // meaning json response message
-        } else {
-            renderPoke(json)
-        }
+        // debugger
+        // console.log(json)
+        renderPoke(json)
+
+        // if(json.message){
+        //     alert(json.message) // meaning json response message
+        // } else {
+        //     renderPoke(json)
+        // }
     })
     .catch(error => console.log(error))
 }
 
-const renderPoke = (event) => {
-    
+const renderPoke = (data) => {
+    console.log(data)
     const ulFind = document.querySelector("ul")
     const li = document.createElement("li")
         debugger
-        li.innerText = `${event.nickname}(${event.species})` //need to find trainer.
+        li.innerText = `${data.nickname}(${data.species})` //need to find trainer.
     const releaseBtn = document.createElement("button")
         releaseBtn.setAttribute("class", "release")
-        releaseBtn.setAttribute("data-pokemon-id", event.id) // will need to find pokemon.
+        releaseBtn.setAttribute("data-pokemon-id", data.id) // will need to find pokemon.
         releaseBtn.addEventListener("click", function(e){
             e.preventDefault()
             let configObj = {
