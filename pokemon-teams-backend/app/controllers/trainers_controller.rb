@@ -1,11 +1,13 @@
 class TrainersController < ApplicationController
     def index
         trainers = Trainer.all
-        render json: TrainerSerializer.new(trainers)
+        render json: trainers, include: [:pokemons]
+        # render json: TrainerSerializer.new(trainers)
     end
 
     def show 
         trainer = Trainer.find_by(id: params[:id])
-        render json: TrainerSerializer.new(trainer)
+        render json: trainer # include: [:pokemons]
+        # render json: TrainerSerializer.new(trainer)
     end
 end
