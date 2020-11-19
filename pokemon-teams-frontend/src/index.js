@@ -26,7 +26,6 @@ const loadTrainers = () => {
         button.innerHTML = 'Add Pokemon'
 
         button.addEventListener('click', createPokemon)
-
         div.appendChild(p)
         div.appendChild(button)
         div.appendChild(ul)
